@@ -27,7 +27,7 @@ public class Game extends AnimationTimer {
     public void handle(long time) {
         int fpsCount = updateFPSCount(time);
         engine.updateSystem(time, controller.getPressedKeys());
-        draw(time, fpsCount);
+        drawer.draw(time, engine.getSprites(), fpsCount);
     }
 
     private int updateFPSCount(long time) {
@@ -39,10 +39,5 @@ public class Game extends AnimationTimer {
             FPSCount = 1;
         }
         return previousFPSCount;
-    }
-
-    private void draw(long time, int fpsCount) {
-        drawer.updateBackground(time);
-        drawer.updateFPS(fpsCount);
     }
 }
