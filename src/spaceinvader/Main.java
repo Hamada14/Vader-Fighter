@@ -5,6 +5,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
+import spaceinvader.control.Controller;
+import spaceinvader.game.Drawer;
+import spaceinvader.game.Engine;
+import spaceinvader.game.Game;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Main extends Application {
 
@@ -25,20 +31,27 @@ public class Main extends Application {
         stage.setResizable(IS_RESIZABLE);
     }
 
-    private Canvas addCanvas (Stage stage) {
+    private Canvas addCanvas (Stage stage, Controller controller) {
         Canvas canvas = new Canvas();
         Group root = new Group();
         root.getChildren().add(canvas);
         Scene scene = new Scene(root);
         stage.setScene(scene);
+
+        scene.setOnKeyPressed(controller.getPressHandler());
+        scene.setOnKeyReleased(controller.getReleaseHandler());
+
+        return canvas;
     }
 
     @Override
     public void start(Stage stage) {
-        Canvas canvas = addCanvas(stage);
+        Controller controller = new Controller();
+        Canvas canvas = addCanvas(stage, controller);
         Drawer drawer = new Drawer(canvas);
+        Game game = new Game(drawer, new Engine(System.nanoTime()), controller);
         initializeStage(stage);
         stage.show();
-        new Game(drawer).start();
+        game.start();
     }
 }
